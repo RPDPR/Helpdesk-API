@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use App\Enums\UserRole;
+use App\Enums\TicketStatus;
+use App\Enums\TicketPriority;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -19,7 +23,18 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'user@demo',
+            'password' => 'password'
+        ]);
+        User::factory()->create([
+            'name' => 'Test Agent',
+            'email' => 'agent@demo',
+            'password' => 'password'
+        ]);
+        User::factory()->create([
+            'name' => 'Test Admin',
+            'email' => 'admin@demo',
+            'password' => 'password'
         ]);
     }
 }
