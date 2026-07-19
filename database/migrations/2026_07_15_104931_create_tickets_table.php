@@ -24,6 +24,10 @@ return new class extends Migration
             $table->text('body');
             $table->string('status')->default(TicketStatus::open->value);
             $table->string('priority')->default(TicketPriority::low->value);
+
+            $table->unsignedBigInteger('assigned_agent_id')->nullable();
+            $table->foreign('assigned_agent_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }
