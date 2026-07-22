@@ -5,9 +5,9 @@ namespace App\Http\Requests\Api\V1\Ticket;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\TicketPriority;
+use App\Enums\TicketStatus;
 
-class StoreRequest extends FormRequest
+class ChangeStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +25,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string|max:4000',
-            'priority' => [
+            'status' => [
                 'required',
                 'string',
-                Rule::enum(TicketPriority::class)
+                Rule::enum(TicketStatus::class)
             ]
         ];
     }

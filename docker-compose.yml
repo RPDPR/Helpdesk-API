@@ -48,7 +48,22 @@ services:
     container_name: helpdesk_redis
     networks:
       - sail
-
+  queue-worker:
+    build:
+      context: .
+      dockerfile: _docker/app/Dockerfile
+    volumes:
+      - ./:/var/www/
+    env_file:
+      - .env
+    command: php artisan queue:work 
+    restart: always 
+    depends_on:
+      - pgsql
+      - redis
+    container_name: helpdesk_queue_worker
+    networks:
+      - sail
 
 networks:
   sail:

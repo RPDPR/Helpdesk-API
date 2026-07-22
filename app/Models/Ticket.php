@@ -6,8 +6,9 @@ use App\Models\Traits\Filterable;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Visible;
 
-#[Fillable(['user_id', 'subject', 'body', 'status', 'priority'])]
+#[Fillable(['user_id', 'subject', 'body', 'status', 'priority', 'assigned_agent_id'])]
 class Ticket extends Model
 {
     use Filterable;
@@ -16,7 +17,7 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function ticketEvents(){
-        return $this->hasMany(TicketEvent::class);
+    public function events(){
+        return $this->hasMany(TicketEvent::class)->orderByDesc('id');
     }
 }

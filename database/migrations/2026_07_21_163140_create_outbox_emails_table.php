@@ -4,9 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Enums\TicketStatus;
-use App\Enums\TicketPriority;
-
 return new class extends Migration
 {
     /**
@@ -14,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ticket_events', function (Blueprint $table) {
+        Schema::create('outbox_emails', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('ticket_id');
-            $table->foreign('ticket_id')->references('id')->on('tickets');
+            $table->string('event_type');
 
-            $table->string('type');
-            $table->json('payload');
-            
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ticket_events');
+        Schema::dropIfExists('outbox_emails');
     }
 };

@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Enums\TicketEventType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketResource extends JsonResource
+class TicketEventResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +17,8 @@ class TicketResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'subject' => $this->subject,
-            'body' => $this->body,
-            'status' => $this->status,
-            'priority' => $this->priority,
-            'events' => TicketEventResource::collection($this->whenLoaded('events'))
+            'type' => $this->type,
+            'payload' => json_decode($this->payload)
         ];
     }
 }

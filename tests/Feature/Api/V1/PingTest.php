@@ -26,7 +26,7 @@ class PingTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $response = $this->get('/api/v1/ping');
+        $response = $this->post('/api/v1/ping');
 
         $response->assertOk();
     }
@@ -34,11 +34,11 @@ class PingTest extends TestCase
     #[Test] //
     public function test_ping_failed(): void
     {
-        Route::get('/api/v1/ping', function () {
-        abort(500, 'API IS DOWN');
+        Route::post('/api/v1/ping', function () {
+            abort(500, 'API IS DOWN');
         });
 
-        $response = $this->get('/api/v1/ping');
+        $response = $this->post('/api/v1/ping');
 
         $response->assertStatus(500);
     }
