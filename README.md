@@ -26,7 +26,7 @@ docker compose exec app php artisan migrate --seed
 docker compose exec app php artisan jwt:secret
 ```
 
-The API is now running. Background workers are already integrated into the container stack.
+The API is now running. Congratulations!
 
 ## Key Commands
 - **Logs:** `docker compose logs -f`
