@@ -2,7 +2,7 @@
 
 A robust RESTful API for a helpdesk system, built with Laravel and fully containerized with Docker for easy deployment and consistent environments.
 
-## Quick Start (Deploy on any machine)
+## Quick Start
 
 Follow these steps to launch the project:
 
