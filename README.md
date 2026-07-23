@@ -1,18 +1,32 @@
-# HELPDESK API
+# Helpdesk API
 
----
+A robust RESTful API for a helpdesk system, built with Laravel and fully containerized with Docker for easy deployment and consistent environments.
 
-## Quick start
+## Quick Start (Deploy on any machine)
 
+Follow these steps to launch the project:
+
+### 1. Clone & Setup
+```bash
 git clone https://github.com/RPDPR/Helpdesk-API
-
 cd Helpdesk-API
+cp .env.example .env
+```
 
-create a `.env` file in project's root
-fill it with `.env.example` contents
-
+### 2. Run with Docker
+```bash
 docker compose up -d --build
+```
 
-php artisan migrate --seed
+### 3. Initialize Application
+```bash
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed
+```
 
-php artisan queue:work
+The API is now running. Background workers are already integrated into the container stack.
+
+## Key Commands
+- **Logs:** `docker compose logs -f`
+- **Stop:** `docker compose down`
+- **Rebuild:** `docker compose up -d --build`
