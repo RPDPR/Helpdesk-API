@@ -1,6 +1,6 @@
 # Helpdesk API
 
-A robust RESTful API for a helpdesk system, built with Laravel and fully containerized with Docker for easy deployment and consistent environments.
+A robust and scalable RESTful API for a Helpdesk system designed to streamline customer support ticketing and issue resolution. The system features a role-based access control mechanism with distinct workflows for Clients, Support Agents, and Administrators.
 
 ## Quick Start
 
