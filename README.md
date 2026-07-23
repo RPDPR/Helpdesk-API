@@ -1,6 +1,6 @@
 # Helpdesk API
 
-A robust and scalable RESTful API for a Helpdesk system designed to streamline customer support ticketing and issue resolution. The system features a role-based access control mechanism with distinct workflows for Clients, Support Agents, and Administrators.
+A robust Helpdesk API for ticket management with role-based access control for Clients, Support Agents, and Administrators.
 
 ## Quick Start
 
