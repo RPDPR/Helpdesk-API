@@ -20,6 +20,7 @@ docker compose up -d --build
 
 ### 3. Initialize Application
 ```bash
+docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
 ```
