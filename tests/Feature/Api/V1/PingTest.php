@@ -17,7 +17,7 @@ class PingTest extends TestCase
     {
         parent::setUp();
         $this->withHeaders([
-            'accept' => 'application/json'
+            'accept' => 'application/json',
         ]);
     }
 

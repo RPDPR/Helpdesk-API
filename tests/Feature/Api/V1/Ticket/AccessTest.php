@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
-use App\Models\User;
-use App\Models\Ticket;
 use App\Enums\UserRole;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -55,7 +55,7 @@ class AccessTest extends TestCase
     public function test_admin_can_see_all_tickets(): void
     {
         $this->withoutExceptionHandling();
-        
+
         $admin = User::factory()->create(['role' => UserRole::admin->value]);
         $ticket1 = Ticket::factory()->create();
         $ticket2 = Ticket::factory()->create();

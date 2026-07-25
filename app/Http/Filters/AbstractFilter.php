@@ -11,8 +11,6 @@ abstract class AbstractFilter implements FilterInterface
 
     /**
      * AbstractFilter constructor.
-     *
-     * @param array $queryParams
      */
     public function __construct(array $queryParams)
     {
@@ -32,17 +30,10 @@ abstract class AbstractFilter implements FilterInterface
         }
     }
 
-    /**
-     * @param Builder $builder
-     */
-    protected function before(Builder $builder)
-    {
-    }
+    protected function before(Builder $builder) {}
 
     /**
-     * @param string $key
-     * @param mixed|null $default
-     *
+     * @param  mixed|null  $default
      * @return mixed|null
      */
     protected function getQueryParam(string $key, $default = null)
@@ -51,8 +42,7 @@ abstract class AbstractFilter implements FilterInterface
     }
 
     /**
-     * @param string[] $keys
-     *
+     * @param  string[]  $keys
      * @return AbstractFilter
      */
     protected function removeQueryParam(string ...$keys)

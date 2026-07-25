@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
+use App\Enums\UserRole;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Enums\UserRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -30,7 +30,7 @@ class AssignTest extends TestCase
         $response->assertStatus(403);
         $this->assertDatabaseHas('tickets', [
             'id' => $ticket->id,
-            'assigned_agent_id' => null
+            'assigned_agent_id' => null,
         ]);
         $this->assertDatabaseCount('ticket_events', 0);
     }
@@ -48,7 +48,7 @@ class AssignTest extends TestCase
         $response->assertStatus(200);
         $this->assertDatabaseHas('tickets', [
             'id' => $ticket->id,
-            'assigned_agent_id' => $agent->id
+            'assigned_agent_id' => $agent->id,
         ]);
         $this->assertDatabaseCount('ticket_events', 1);
     }
@@ -57,7 +57,7 @@ class AssignTest extends TestCase
     public function test_admin_can_assign_ticket_and_it_creates_a_new_event(): void
     {
         $this->withoutExceptionHandling();
-        
+
         $admin = User::factory()->create(['role' => UserRole::admin->value]);
         $ticket = Ticket::factory()->create(['assigned_agent_id' => null]);
 
@@ -66,7 +66,7 @@ class AssignTest extends TestCase
         $response->assertStatus(200);
         $this->assertDatabaseHas('tickets', [
             'id' => $ticket->id,
-            'assigned_agent_id' => $admin->id
+            'assigned_agent_id' => $admin->id,
         ]);
         $this->assertDatabaseCount('ticket_events', 1);
     }

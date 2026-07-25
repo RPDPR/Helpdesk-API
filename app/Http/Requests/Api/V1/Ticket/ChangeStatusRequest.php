@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\Ticket;
 
+use App\Enums\TicketStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\TicketStatus;
 
 class ChangeStatusRequest extends FormRequest
 {
@@ -28,8 +28,8 @@ class ChangeStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::enum(TicketStatus::class)
-            ]
+                Rule::enum(TicketStatus::class),
+            ],
         ];
     }
 }

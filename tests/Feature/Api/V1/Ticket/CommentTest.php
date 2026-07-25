@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
+use App\Enums\UserRole;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Enums\UserRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -27,7 +27,7 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['user_id' => $owner->id]);
 
         $response = $this->actingAs($user)->post("/api/v1/tickets/{$ticket->id}/comment", [
-            'text' => 'Some comment'
+            'text' => 'Some comment',
         ]);
 
         $response->assertStatus(403);
@@ -43,7 +43,7 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['user_id' => $owner->id]);
 
         $response = $this->actingAs($owner)->post("/api/v1/tickets/{$ticket->id}/comment", [
-            'text' => 'Some comment'
+            'text' => 'Some comment',
         ]);
 
         $response->assertStatus(200);
@@ -60,7 +60,7 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['user_id' => $owner->id]);
 
         $response = $this->actingAs($agent)->post("/api/v1/tickets/{$ticket->id}/comment", [
-            'text' => 'Some comment'
+            'text' => 'Some comment',
         ]);
 
         $response->assertStatus(200);
@@ -77,7 +77,7 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['user_id' => $owner->id]);
 
         $response = $this->actingAs($admin)->post("/api/v1/tickets/{$ticket->id}/comment", [
-            'text' => 'Some comment'
+            'text' => 'Some comment',
         ]);
 
         $response->assertStatus(200);

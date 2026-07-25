@@ -4,8 +4,6 @@ namespace App\Http\Requests\Api\V1\Ticket;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use App\Enums\TicketStatus;
 
 class CommentRequest extends FormRequest
 {
@@ -25,7 +23,7 @@ class CommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => 'required|string|max:4000'
+            'text' => 'required|string|max:4000',
         ];
     }
 }

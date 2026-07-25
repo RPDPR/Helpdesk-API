@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
 use Override;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use App\Models\User;
 
 class AuthTest extends TestCase
 {
@@ -18,7 +17,7 @@ class AuthTest extends TestCase
     {
         parent::setUp();
         $this->withHeaders([
-            'accept' => 'application/json'
+            'accept' => 'application/json',
         ]);
     }
 
@@ -31,14 +30,14 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikita@demo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $response = $this->post('/api/v1/auth/register', $data);
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'access_token', 'token_type', 'expires_in'
+            'access_token', 'token_type', 'expires_in',
         ]);
 
         $this->assertDatabaseCount('users', 1);
@@ -50,7 +49,7 @@ class AuthTest extends TestCase
         $data =
         [
             'email' => 'nikita@demo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $response = $this->post('/api/v1/auth/register', $data);
@@ -68,7 +67,7 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikitademo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $response = $this->post('/api/v1/auth/register', $data);
@@ -86,7 +85,7 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikita@demo',
-            'password' => 'nikitaP'
+            'password' => 'nikitaP',
         ];
 
         $response = $this->post('/api/v1/auth/register', $data);
@@ -106,7 +105,7 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikita@demo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $user = User::factory()->create($data);
@@ -119,7 +118,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'access_token', 'token_type', 'expires_in'
+            'access_token', 'token_type', 'expires_in',
         ]);
     }
 
@@ -130,7 +129,7 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikita@demo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $user = User::factory()->create($data);
@@ -153,7 +152,7 @@ class AuthTest extends TestCase
         [
             'name' => 'Nikita',
             'email' => 'nikita@demo',
-            'password' => 'nikitaPassword'
+            'password' => 'nikitaPassword',
         ];
 
         $user = User::factory()->create($data);
@@ -176,7 +175,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(401);
         $response->assertJson([
-            'message' => 'Unauthenticated.'
+            'message' => 'Unauthenticated.',
         ]);
     }
 }

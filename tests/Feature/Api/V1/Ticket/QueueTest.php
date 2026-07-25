@@ -2,11 +2,10 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
-use App\Models\Ticket;
-use App\Models\User;
-use App\Enums\UserRole;
 use App\Enums\TicketPriority;
+use App\Enums\UserRole;
 use App\Jobs\SendTicketEmailJob;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,7 +31,7 @@ class QueueTest extends TestCase
         $this->actingAs($user)->post('/api/v1/tickets', [
             'subject' => 'Some subject',
             'body' => 'Some huge body right here',
-            'priority' => TicketPriority::high->value
+            'priority' => TicketPriority::high->value,
         ]);
 
         Queue::assertPushed(SendTicketEmailJob::class);

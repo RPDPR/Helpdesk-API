@@ -27,7 +27,7 @@ class FilterRequest extends FormRequest
             'body' => 'string',
             'status' => 'string',
             'priority' => 'string',
-            'assigned' => 'string'
+            'assigned' => 'string',
         ];
     }
 }

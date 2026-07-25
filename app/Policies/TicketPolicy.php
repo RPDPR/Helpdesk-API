@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Enums\UserRole;
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class TicketPolicy
 {
@@ -22,11 +21,12 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket): bool
     {
-        return match($user->role)
-        {
+        return match ($user->role) {
             UserRole::user->value => $user->id === $ticket->user_id,
             UserRole::agent->value => true,
-            UserRole::admin->value => true
+            UserRole::admin->value => true,
+
+            default => false
         };
     }
 
@@ -43,11 +43,12 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket): bool
     {
-        return match($user->role)
-        {
+        return match ($user->role) {
             UserRole::user->value => false,
             UserRole::agent->value => true,
-            UserRole::admin->value => true
+            UserRole::admin->value => true,
+
+            default => false
         };
     }
 
@@ -74,34 +75,37 @@ class TicketPolicy
     {
         return false;
     }
-    
+
     public function assign(User $user, Ticket $ticket)
     {
-        return match($user->role)
-        {
+        return match ($user->role) {
             UserRole::user->value => false,
             UserRole::agent->value => true,
-            UserRole::admin->value => true
+            UserRole::admin->value => true,
+
+            default => false
         };
     }
 
     public function changeStatus(User $user, Ticket $ticket)
     {
-        return match($user->role)
-        {
+        return match ($user->role) {
             UserRole::user->value => false,
             UserRole::agent->value => true,
-            UserRole::admin->value => true
+            UserRole::admin->value => true,
+
+            default => false
         };
     }
 
     public function comment(User $user, Ticket $ticket)
     {
-        return match($user->role)
-        {
+        return match ($user->role) {
             UserRole::user->value => $user->id === $ticket->user_id,
             UserRole::agent->value => true,
-            UserRole::admin->value => true
+            UserRole::admin->value => true,
+
+            default => false
         };
     }
 }

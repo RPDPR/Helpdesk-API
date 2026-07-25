@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api\V1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketEventResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,9 @@ class TicketEventResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'type' => $this->type,
-            'payload' => $this->payload,
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role,
         ];
     }
 }

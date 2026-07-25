@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Api\V1\Ticket;
 
+use App\Enums\TicketPriority;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\TicketPriority;
 
 class StoreRequest extends FormRequest
 {
@@ -30,8 +30,8 @@ class StoreRequest extends FormRequest
             'priority' => [
                 'required',
                 'string',
-                Rule::enum(TicketPriority::class)
-            ]
+                Rule::enum(TicketPriority::class),
+            ],
         ];
     }
 }

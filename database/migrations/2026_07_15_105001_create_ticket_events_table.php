@@ -4,9 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Enums\TicketStatus;
-use App\Enums\TicketPriority;
-
 return new class extends Migration
 {
     /**
@@ -22,7 +19,7 @@ return new class extends Migration
 
             $table->string('type');
             $table->json('payload');
-            
+
             $table->timestamps();
         });
     }

@@ -2,11 +2,10 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
+use App\Enums\TicketStatus;
+use App\Enums\UserRole;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Enums\UserRole;
-use App\Enums\TicketStatus;
-use App\Enums\TicketPriority;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -28,7 +27,7 @@ class StatusChangeTest extends TestCase
         $ticket = Ticket::factory()->create(['status' => TicketStatus::open->value]);
 
         $response = $this->actingAs($user)->post("/api/v1/tickets/{$ticket->id}/status", [
-            'status' => TicketStatus::closed->value
+            'status' => TicketStatus::closed->value,
         ]);
 
         $response->assertStatus(403);
@@ -44,7 +43,7 @@ class StatusChangeTest extends TestCase
         $ticket = Ticket::factory()->create(['status' => TicketStatus::open->value]);
 
         $response = $this->actingAs($agent)->post("/api/v1/tickets/{$ticket->id}/status", [
-            'status' => TicketStatus::closed->value
+            'status' => TicketStatus::closed->value,
         ]);
 
         $response->assertStatus(200);
@@ -60,7 +59,7 @@ class StatusChangeTest extends TestCase
         $ticket = Ticket::factory()->create(['status' => TicketStatus::open->value]);
 
         $response = $this->actingAs($admin)->post("/api/v1/tickets/{$ticket->id}/status", [
-            'status' => TicketStatus::closed->value
+            'status' => TicketStatus::closed->value,
         ]);
 
         $response->assertStatus(200);

@@ -2,13 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-use App\Enums\UserRole;
-use App\Enums\TicketStatus;
-use App\Enums\TicketPriority;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,19 +22,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'user@demo',
             'password' => 'userPassword',
-            'role' => UserRole::user->value
+            'role' => UserRole::user->value,
         ]);
         User::factory()->create([
             'name' => 'Test Agent',
             'email' => 'agent@demo',
             'password' => 'agentPassword',
-            'role' => UserRole::agent->value
+            'role' => UserRole::agent->value,
         ]);
         User::factory()->create([
             'name' => 'Test Admin',
             'email' => 'admin@demo',
             'password' => 'adminPassword',
-            'role' => UserRole::admin->value
+            'role' => UserRole::admin->value,
         ]);
     }
 }

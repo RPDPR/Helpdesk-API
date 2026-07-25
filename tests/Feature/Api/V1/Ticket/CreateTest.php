@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Api\V1\Ticket;
 
-use App\Models\User;
-use App\Enums\UserRole;
 use App\Enums\TicketPriority;
+use App\Enums\UserRole;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -23,12 +23,12 @@ class CreateTest extends TestCase
     public function test_ticket_creation_saves_ticket_and_event(): void
     {
         $this->withoutExceptionHandling();
-        
+
         $user = User::factory()->create(['role' => UserRole::user->value]);
         $data = [
             'subject' => 'Some subject',
             'body' => 'Some huge body right here',
-            'priority' => TicketPriority::high->value
+            'priority' => TicketPriority::high->value,
         ];
 
         $response = $this->actingAs($user)->post('/api/v1/tickets', $data);

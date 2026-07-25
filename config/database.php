@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
 use Pdo\Mysql;
 
 return [
@@ -149,7 +148,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX') . ':',
+            'prefix' => env('REDIS_PREFIX').':',
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 

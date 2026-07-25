@@ -2,133 +2,117 @@
 
 namespace App\Http\Services\Api\V1;
 
-use App\Models\User;
+use App\Enums\TicketEventType;
+use App\Enums\TicketStatus;
+use App\Jobs\SendTicketEmailJob;
 use App\Models\Ticket;
 use App\Models\TicketEvent;
-use App\Enums\TicketStatus;
-use App\Enums\TicketEventType;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use App\Jobs\SendTicketEmailJob;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class TicketService
 {
-    public function create(User $user, array $data): Ticket|string
+    public function create(User $user, array $data): Ticket
     {
         $data['user_id'] = $user->id;
         $data['status'] = TicketStatus::open->value;
 
-        try
-        {
+        try {
             DB::beginTransaction();
 
-            $ticket = Ticket::firstOrCreate($data);
+            $ticket = Ticket::create($data);
 
-            if($ticket->wasRecentlyCreated)
-            {
+            if ($ticket->wasRecentlyCreated) {
                 $ticketEventData = [
                     'ticket_id' => $ticket->id,
                     'type' => TicketEventType::created->value,
-                    'payload' => json_encode(
-                        [
-                            'subject' => $data['subject'],
-                            'priority' => $data['priority'],
-                            'author_id' => $user->id,
-                        ]
-                    )
+                    'payload' => [
+                        'subject' => $data['subject'],
+                        'priority' => $data['priority'],
+                        'author_id' => $user->id,
+                    ],
                 ];
 
                 TicketEvent::create($ticketEventData);
-
-                SendTicketEmailJob::dispatch($ticket->id, $ticketEventData['type']);
             }
 
             $ticket->load('events');
 
             DB::commit();
 
-            if($ticket->wasRecentlyCreated)
-            {
+            if ($ticket->wasRecentlyCreated) {
+                SendTicketEmailJob::dispatch($ticket->id, TicketEventType::created->value);
+
                 Cache::tags(['tickets:lists'])->flush();
             }
-            Cache::forget("ticket:{$ticket->id}");
 
             return $ticket;
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Throwable $exception) {
             DB::rollBack();
 
-            return $exception->getMessage();
+            throw $exception;
         }
     }
 
-    public function assign(User $user, Ticket $ticket, array $data = []): Ticket|string
+    public function assign(User $user, Ticket $ticket, array $data = []): Ticket
     {
         Gate::authorize('assign', $ticket);
 
-        if($ticket->assigned_agent_id === $user->id)
-        {
+        if ($ticket->assigned_agent_id === $user->id) {
             $ticket->load('events');
 
             return $ticket;
         }
 
-        try
-        {
+        try {
             DB::beginTransaction();
 
             $ticket->update([
-                'assigned_agent_id' => $user->id
+                'assigned_agent_id' => $user->id,
             ]);
 
             $ticketEventData = [
                 'ticket_id' => $ticket->id,
                 'type' => TicketEventType::assigned->value,
-                'payload' => json_encode(
-                    [
-                        'assigned_agent_id' => $user->id,
-                        'owner_id' => $ticket->user_id,
-                        'author_id' => $user->id,
-                    ]
-                )
+                'payload' => [
+                    'assigned_agent_id' => $user->id,
+                    'owner_id' => $ticket->user_id,
+                    'author_id' => $user->id,
+                ],
             ];
 
             TicketEvent::create($ticketEventData);
 
-            SendTicketEmailJob::dispatch($ticket->id, $ticketEventData['type']);
-
             $ticket->load('events');
 
             DB::commit();
-            
-            Cache::forget("ticket:{$ticket->id}");
+
+            SendTicketEmailJob::dispatch($ticket->id, TicketEventType::assigned->value);
+
             Cache::tags(['tickets:lists'])->flush();
+            Cache::forget("ticket:{$ticket->id}");
 
             return $ticket;
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Throwable $exception) {
             DB::rollBack();
 
-            return $exception->getMessage();
+            throw $exception;
         }
     }
 
-    public function setStatus(User $user, Ticket $ticket, array $data): Ticket|string
+    public function setStatus(User $user, Ticket $ticket, array $data): Ticket
     {
         Gate::authorize('changeStatus', $ticket);
 
-        if($ticket->status === $data['status'])
-        {
+        if ($ticket->status === $data['status']) {
             $ticket->load('events');
 
             return $ticket;
         }
 
-        try
-        {
+        try {
             DB::beginTransaction();
 
             $ticketOldStatus = $ticket->status;
@@ -137,75 +121,64 @@ class TicketService
             $ticketEventData = [
                 'ticket_id' => $ticket->id,
                 'type' => TicketEventType::status_changed->value,
-                'payload' => json_encode(
-                    [
-                        'old_status' => $ticketOldStatus,
-                        'new_status' => $data['status'],
-                        'author_id' => $user->id,
-                    ]
-                )
+                'payload' => [
+                    'old_status' => $ticketOldStatus,
+                    'new_status' => $data['status'],
+                    'author_id' => $user->id,
+                ],
             ];
 
             TicketEvent::create($ticketEventData);
-
-            SendTicketEmailJob::dispatch($ticket->id, $ticketEventData['type']);
 
             $ticket->load('events');
 
             DB::commit();
 
-            Cache::forget("ticket:{$ticket->id}");
+            SendTicketEmailJob::dispatch($ticket->id, TicketEventType::status_changed->value);
+
             Cache::tags(['tickets:lists'])->flush();
+            Cache::forget("ticket:{$ticket->id}");
 
             return $ticket;
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Throwable $exception) {
             DB::rollBack();
 
-            return $exception->getMessage();
+            throw $exception;
         }
     }
 
-    public function comment(User $user, Ticket $ticket, array $data): Ticket|string
+    public function comment(User $user, Ticket $ticket, array $data): Ticket
     {
         Gate::authorize('comment', $ticket);
 
-        try
-        {
+        try {
             DB::beginTransaction();
-
-            $ticket->update($data);
 
             $ticketEventData = [
                 'ticket_id' => $ticket->id,
                 'type' => TicketEventType::comment->value,
-                'payload' => json_encode(
-                    [
-                        'text' => $data['text'],
-                        'author_id' => $user->id,
-                    ]
-                )
+                'payload' => [
+                    'text' => $data['text'],
+                    'author_id' => $user->id,
+                ],
             ];
 
             TicketEvent::create($ticketEventData);
-
-            SendTicketEmailJob::dispatch($ticket->id, $ticketEventData['type']);
 
             $ticket->load('events');
 
             DB::commit();
 
-            Cache::forget("ticket:{$ticket->id}");
+            SendTicketEmailJob::dispatch($ticket->id, TicketEventType::comment->value);
+
             Cache::tags(['tickets:lists'])->flush();
+            Cache::forget("ticket:{$ticket->id}");
 
             return $ticket;
-        }
-        catch(\Exception $exception)
-        {
+        } catch (\Throwable $exception) {
             DB::rollBack();
 
-            return $exception->getMessage();
+            throw $exception;
         }
     }
 }

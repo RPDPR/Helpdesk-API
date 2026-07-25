@@ -11,6 +11,7 @@ class SendTicketEmailJob implements ShouldQueue
     use Queueable;
 
     public int $ticket_id;
+
     public string $event_type;
 
     /**
@@ -28,7 +29,7 @@ class SendTicketEmailJob implements ShouldQueue
     public function handle(): void
     {
         DB::table('outbox_emails')->insert([
-            'ticket_id'  => $this->ticket_id,
+            'ticket_id' => $this->ticket_id,
             'event_type' => $this->event_type,
             'created_at' => now(),
             'updated_at' => now(),

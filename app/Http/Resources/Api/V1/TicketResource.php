@@ -21,7 +21,9 @@ class TicketResource extends JsonResource
             'body' => $this->body,
             'status' => $this->status,
             'priority' => $this->priority,
-            'events' => TicketEventResource::collection($this->whenLoaded('events'))
+            'assigned_agent_id' => $this->assigned_agent_id,
+            'created_at' => $this->created_at,
+            'events' => TicketEventResource::collection($this->whenLoaded('events')),
         ];
     }
 }
